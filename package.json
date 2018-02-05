@@ -1,0 +1,46 @@
+{
+  "name": "ember-cli-deploy-compress",
+  "version": "0.0.0",
+  "description": "Ember CLI Deploy plugin to compress files in gzip or brotli",
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "ember server",
+    "build": "ember build",
+    "test": "node tests/runner.js && ./node_modules/.bin/eslint index.js tests/**/*.js"
+  },
+  "repository": "https://github.com/cibernox/ember-cli-deploy-compress",
+  "engines": {
+    "node": "^4.5 || 6.* || >= 7.*"
+  },
+  "author": "Miguel Camba",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "ember-cli": "^2.12.0",
+    "ember-cli-release": "^1.0.0-beta.2",
+    "eslint": "^3.18.0",
+    "github": "^9.2.0",
+    "glob": "^7.0.5",
+    "mocha": "^3.2.0",
+    "multiline": "^1.0.2",
+    "rimraf": "^2.3.4"
+  },
+  "keywords": [
+    "ember-addon",
+    "ember-cli-deploy-plugin"
+  ],
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "core-object": "^2.0.6",
+    "ember-cli-deploy-plugin": "^0.2.9",
+    "minimatch": "^3.0.3",
+    "rsvp": "^3.5.0"
+  },
+  "ember-addon": {
+    "configPath": "tests/dummy/config"
+  }
+}
