@@ -76,6 +76,7 @@ describe('compress plugin', function() {
         assert.isDefined(config.compress.zopfli);
       });
     });
+
     describe('with a filePattern, ignorePattern, zopfli, distDir, and distFiles provided', function () {
       beforeEach(function() {
         config = {

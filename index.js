@@ -14,9 +14,9 @@ var DeployPluginBase = require('ember-cli-deploy-plugin');
 module.exports = {
   name: 'ember-cli-deploy-compress',
 
-  createDeployPlugin: function(options) {
+  createDeployPlugin(options) {
     var fs = require('fs');
-
+    let targets = this._getTargets();
     var DeployPlugin = DeployPluginBase.extend({
       name: options.name,
       defaultConfig: {
@@ -24,10 +24,10 @@ module.exports = {
         ignorePattern: null,
         zopfli: false,
         keep: false,
-        distDir: function(context){
+        distDir(context){
           return context.distDir;
         },
-        distFiles: function(context){
+        distFiles(context){
           return context.distFiles;
         }
       },
@@ -115,5 +115,16 @@ module.exports = {
       }
     });
     return new DeployPlugin();
-  }
+  },
+
+  _getTargets() {
+    let targets = this.project && this.project.targets;
+
+    let parser = require('babel-preset-env/lib/targets-parser').default;
+    if (typeof targets === 'object' && targets !== null) {
+      return parser(targets);
+    } else {
+      return targets;
+    }
+  },
 };
