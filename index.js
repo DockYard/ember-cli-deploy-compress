@@ -5,6 +5,7 @@ var RSVP   = require('rsvp');
 var fs        = require('fs');
 var path      = require('path');
 var minimatch = require('minimatch');
+var caniuse = require('caniuse-api');
 
 var denodeify = require('rsvp').denodeify;
 var renameFile  = denodeify(fs.rename);
@@ -17,6 +18,7 @@ module.exports = {
   createDeployPlugin(options) {
     var fs = require('fs');
     let targets = this._getTargets();
+    caniuse.isSupported('brotli', targets.browsers);
     var DeployPlugin = DeployPluginBase.extend({
       name: options.name,
       defaultConfig: {
