@@ -118,13 +118,13 @@ module.exports = {
   },
 
   _getTargets() {
-    let targets = this.project && this.project.targets;
+    return this.project && this.project.targets;
 
-    let parser = require('babel-preset-env/lib/targets-parser').default;
-    if (typeof targets === 'object' && targets !== null) {
-      return parser(targets);
-    } else {
-      return targets;
-    }
+    // let parser = require('babel-preset-env/lib/targets-parser').default;
+    // if (typeof targets === 'object' && targets !== null) {
+    //   return parser(targets);
+    // } else {
+    //   return targets;
+    // }
   },
 };

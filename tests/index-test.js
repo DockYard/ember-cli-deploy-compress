@@ -80,7 +80,7 @@ describe('compress plugin', function() {
     describe('with a filePattern, ignorePattern, zopfli, distDir, and distFiles provided', function () {
       beforeEach(function() {
         config = {
-          gzip: {
+          compress: {
             filePattern: '**/*.*',
             ignorePattern: '**/specific.thing',
             zopfli: false,
@@ -90,7 +90,7 @@ describe('compress plugin', function() {
           }
         };
         plugin = subject.createDeployPlugin({
-          name: 'gzip'
+          name: 'compress'
         });
         context = {
           ui: mockUi,
@@ -118,7 +118,7 @@ describe('compress plugin', function() {
 
     beforeEach(function() {
       plugin = subject.createDeployPlugin({
-        name: 'gzip'
+        name: 'compress'
       });
 
       context = {
@@ -131,7 +131,7 @@ describe('compress plugin', function() {
         ui: mockUi,
         project: { name: function() { return 'test-project'; } },
         config: {
-          gzip: {
+          compress: {
             filePattern: '**/*.js',
             ignorePattern: '**/ignore.*',
             distDir: function(context){ return context.distDir; },
@@ -165,7 +165,7 @@ describe('compress plugin', function() {
 
     describe('when keep is enabled', function() {
       beforeEach(function() {
-        context.config.gzip.keep = true;
+        context.config.compress.keep = true;
       });
 
       it('gzips the matching files with .gz suffix', function(done) {
