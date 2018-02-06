@@ -7,7 +7,7 @@ var fs  = require('fs');
 var path  = require('path');
 var rimraf  = RSVP.denodeify(require('rimraf'));
 
-describe('gzip plugin', function() {
+describe('compress plugin', function() {
   var subject, mockUi, config;
 
   beforeEach(function() {
@@ -41,11 +41,12 @@ describe('gzip plugin', function() {
 
   describe('configure hook', function() {
     var plugin, context;
+
     describe('without providing config', function () {
       beforeEach(function() {
         config = { };
         plugin = subject.createDeployPlugin({
-          name: 'gzip'
+          name: 'compress'
         });
         context = {
           ui: mockUi,
@@ -68,11 +69,11 @@ describe('gzip plugin', function() {
 
       it('adds default config to the config object', function() {
         plugin.configure(context);
-        assert.isDefined(config.gzip.filePattern);
-        assert.isDefined(config.gzip.ignorePattern);
-        assert.isDefined(config.gzip.distDir);
-        assert.isDefined(config.gzip.distFiles);
-        assert.isDefined(config.gzip.zopfli);
+        assert.isDefined(config.compress.filePattern);
+        assert.isDefined(config.compress.ignorePattern);
+        assert.isDefined(config.compress.distDir);
+        assert.isDefined(config.compress.distFiles);
+        assert.isDefined(config.compress.zopfli);
       });
     });
     describe('with a filePattern, ignorePattern, zopfli, distDir, and distFiles provided', function () {

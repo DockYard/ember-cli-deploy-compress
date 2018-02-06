@@ -12,7 +12,7 @@ var renameFile  = denodeify(fs.rename);
 var DeployPluginBase = require('ember-cli-deploy-plugin');
 
 module.exports = {
-  name: 'ember-cli-deploy-gzip',
+  name: 'ember-cli-deploy-compress',
 
   createDeployPlugin: function(options) {
     var fs = require('fs');
@@ -32,7 +32,7 @@ module.exports = {
         }
       },
 
-      configure: function(context) {
+      configure(context) {
         this._super.configure.call(this, context);
         if (this.readConfig('zopfli')) {
           this.log("Using zopfli for compression", { verbose: true });
@@ -42,7 +42,7 @@ module.exports = {
         }
       },
 
-      willUpload: function(/* context */) {
+      willUpload(/* context */) {
         var self = this;
 
         var filePattern     = this.readConfig('filePattern');
@@ -51,7 +51,7 @@ module.exports = {
         var distFiles       = this.readConfig('distFiles') || [];
         var keep            = this.readConfig('keep');
 
-        this.log('gzipping `' + filePattern + '`', { verbose: true });
+        this.log('compressping `' + filePattern + '`', { verbose: true });
         this.log('ignoring `' + ignorePattern + '`', { verbose: true });
         return this._gzipFiles(distDir, distFiles, filePattern, ignorePattern, keep)
           .then(function(gzippedFiles) {
@@ -67,7 +67,7 @@ module.exports = {
           })
           .catch(this._errorMessage.bind(this));
       },
-      _gzipFiles: function(distDir, distFiles, filePattern, ignorePattern, keep) {
+      _gzipFiles(distDir, distFiles, filePattern, ignorePattern, keep) {
         var filesToGzip = distFiles.filter(minimatch.filter(filePattern, { matchBase: true }));
         if (ignorePattern != null) {
             filesToGzip = filesToGzip.filter(function(path){
@@ -76,7 +76,7 @@ module.exports = {
         }
         return RSVP.map(filesToGzip, this._gzipFile.bind(this, distDir, keep));
       },
-      _gzipFile: function(distDir, keep, filePath) {
+      _gzipFile(distDir, keep, filePath) {
         var self = this;
         var fullPath = path.join(distDir, filePath);
         var outFilePath = fullPath + '.gz';
@@ -109,7 +109,7 @@ module.exports = {
           return outFilePath;
         });
       },
-      _errorMessage: function(error) {
+      _errorMessage(error) {
         this.log(error, { color: 'red' });
         return RSVP.reject(error);
       }
