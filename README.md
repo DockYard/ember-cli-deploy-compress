@@ -1,3 +1,6 @@
+# [Early WIP]
+This is work to be done on the next dockyard friday.
+
 # ember-cli-deploy-compress
 
 > An ember-cli-deploy plugin to compress files in-place using gzip or brotli compression automatically.
