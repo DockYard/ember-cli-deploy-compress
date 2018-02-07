@@ -22,6 +22,7 @@ module.exports = {
 
     var DeployPlugin = DeployPluginBase.extend({
       name: options.name,
+      canUseBrotli: canUseBrotli,
       defaultConfig: {
         filePattern: '**/*.{js,css,json,ico,map,xml,txt,svg,eot,ttf,woff,woff2}',
         ignorePattern: null,
@@ -37,7 +38,7 @@ module.exports = {
 
       configure(context) {
         this._super.configure.call(this, context);
-        if (canUseBrotli) {
+        if (this.canUseBrotli) {
           this.log("Using brotli for compression", { verbose: true });
           let lib = require('iltorb');
           this.buildCompressor = function() {
@@ -66,7 +67,7 @@ module.exports = {
         var distDir         = this.readConfig('distDir');
         var distFiles       = this.readConfig('distFiles') || [];
         var keep            = this.readConfig('keep');
-        var outputProp      = canUseBrotli ? 'brotliCompressedFiles' : 'gzippedFiles';
+        var outputProp      = this.canUseBrotli ? 'brotliCompressedFiles' : 'gzippedFiles';
 
         this.log('compressing `' + filePattern + '`', { verbose: true });
         this.log('ignoring `' + ignorePattern + '`', { verbose: true });
@@ -97,7 +98,7 @@ module.exports = {
       _compressFile(distDir, keep, filePath) {
         var self = this;
         var fullPath = path.join(distDir, filePath);
-        var fileExtension = canUseBrotli ? '.br' : '.gz';
+        var fileExtension = this.canUseBrotli ? '.br' : '.gz';
         var outFilePath = fullPath + fileExtension;
         return new RSVP.Promise(function(resolve, reject) {
           var inp = fs.createReadStream(fullPath);
