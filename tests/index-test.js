@@ -64,7 +64,7 @@ describe('compress plugin', function() {
           return previous;
         }, []);
 
-        assert.equal(messages.length, 6);
+        assert.equal(messages.length, 7);
       });
 
       it('adds default config to the config object', function() {
@@ -84,6 +84,7 @@ describe('compress plugin', function() {
             filePattern: '**/*.*',
             ignorePattern: '**/specific.thing',
             zopfli: false,
+            compression: ['best'],
             keep: false,
             distDir: 'tmp/dist-deploy',
             distFiles: []
@@ -98,6 +99,7 @@ describe('compress plugin', function() {
         };
         plugin.beforeHook(context);
       });
+
       it('does not warn about missing optional config', function() {
         plugin.configure(context);
         var messages = mockUi.messages.reduce(function(previous, current) {
@@ -108,6 +110,21 @@ describe('compress plugin', function() {
           return previous;
         }, []);
         assert.equal(messages.length, 0);
+      });
+
+      it('throws an error if the `compression` contains something other then `best`, `gzip` or `brotli`', function() {
+        context.config.compress.compression = ['rar'];
+        assert.throws(() => plugin.configure(context), 'The "compression" config option has a wrong value: "rar"')
+      });
+
+      it('allows the `compress` option to be a string instead of an array', function() {
+        context.config.compress.compression = 'gzip';
+        assert.doesNotThrow(() => plugin.configure(context))
+      });
+
+      it('throws an error if the `compression` contains `best` and any other value', function () {
+        context.config.compress.compression = ['best', 'gzip'];
+        assert.throws(() => plugin.configure(context), 'The "compression" config cannot combine "best" with other values')
       });
     });
   });
@@ -206,7 +223,7 @@ describe('compress plugin', function() {
 
     describe('When brotli compression is possible', function () {
       beforeEach(function() {
-        plugin.canUseBrotli = true;
+        plugin.supportsBrotli = true;
         let lib = require('iltorb');
         plugin.buildCompressor = function () {
           return lib.compressStream({ quality: 11 });
