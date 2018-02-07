@@ -39,13 +39,22 @@ module.exports = {
         this._super.configure.call(this, context);
         if (canUseBrotli) {
           this.log("Using brotli for compression", { verbose: true });
-          this.compressFunction = require('iltorb').compressStream({ quality: 11 });
+          let lib = require('iltorb');
+          this.buildCompressor = function() {
+            return lib.compressStream({ quality: 11 });
+          }
         } else if (this.readConfig('zopfli')) {
           this.log("Using zopfli for compression", { verbose: true });
-          this.compressFunction = this.project.require('node-zopfli').createGzip({ format: 'gzip' });
+          let lib = this.project.require('node-zopfli');
+          this.buildCompressor = function() {
+            return lib.createGzip({ format: 'gzip' });
+          }
         } else {
           this.log("Using standard gzip for compression", { verbose: true });
-          this.compressFunction = require('zlib').createGzip({ format: 'gzip' });
+          let lib = require('zlib');
+          this.buildCompressor = function() {
+            return lib.createGzip({ format: 'gzip' });
+          }
         }
       },
 
@@ -94,7 +103,7 @@ module.exports = {
           var inp = fs.createReadStream(fullPath);
           var out = fs.createWriteStream(outFilePath);
 
-          inp.pipe(self.compressFunction).pipe(out);
+          inp.pipe(self.buildCompressor()).pipe(out);
           inp.on('error', function(err){
             reject(err);
           });
