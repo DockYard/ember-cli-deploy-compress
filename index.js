@@ -17,8 +17,8 @@ module.exports = {
 
   createDeployPlugin(options) {
     var fs = require('fs');
-    let targets = this._getTargets();
-    let canUseBrotli = caniuse.isSupported('brotli', targets.browsers.join(','));
+    let browsers = this._getBrowsers();
+    let canUseBrotli = !!browsers && caniuse.isSupported('brotli', browsers);
 
     var DeployPlugin = DeployPluginBase.extend({
       name: options.name,
@@ -135,7 +135,7 @@ module.exports = {
     return new DeployPlugin();
   },
 
-  _getTargets() {
-    return this.project && this.project.targets;
+  _getBrowsers() {
+    return this.project && this.project.targets && this.project.targets.browsers;
   },
 };
