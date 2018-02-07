@@ -40,7 +40,6 @@
     "minimatch": "^3.0.3",
     "rsvp": "^3.5.0",
     "iltorb": "^2.0.3",
-    "node-zopfli": "^2.0.2",
     "caniuse-api": "^2.0.0"
   },
   "ember-addon": {

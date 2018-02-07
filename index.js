@@ -42,7 +42,7 @@ module.exports = {
           this.compressFunction = require('iltorb').compressStream({ quality: 11 });
         } else if (this.readConfig('zopfli')) {
           this.log("Using zopfli for compression", { verbose: true });
-          this.compressFunction = require('node-zopfli').createGzip({ format: 'gzip' });
+          this.compressFunction = this.project.require('node-zopfli').createGzip({ format: 'gzip' });
         } else {
           this.compressFunction = require('zlib').createGzip({ format: 'gzip' });
         }
