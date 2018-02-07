@@ -93,7 +93,7 @@ module.exports = {
           var inp = fs.createReadStream(fullPath);
           var out = fs.createWriteStream(outFilePath);
 
-          inp.pipe(this.compressFunction).pipe(out);
+          inp.pipe(self.compressFunction).pipe(out);
           inp.on('error', function(err){
             reject(err);
           });
