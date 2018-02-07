@@ -44,6 +44,7 @@ module.exports = {
           this.log("Using zopfli for compression", { verbose: true });
           this.compressFunction = this.project.require('node-zopfli').createGzip({ format: 'gzip' });
         } else {
+          this.log("Using standard gzip for compression", { verbose: true });
           this.compressFunction = require('zlib').createGzip({ format: 'gzip' });
         }
       },
@@ -58,7 +59,7 @@ module.exports = {
         var keep            = this.readConfig('keep');
         var outputProp      = canUseBrotli ? 'brotliCompressedFiles' : 'gzippedFiles';
 
-        this.log('compressping `' + filePattern + '`', { verbose: true });
+        this.log('compressing `' + filePattern + '`', { verbose: true });
         this.log('ignoring `' + ignorePattern + '`', { verbose: true });
 
         return this._compressFiles(distDir, distFiles, filePattern, ignorePattern, keep)
