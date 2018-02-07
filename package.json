@@ -1,7 +1,7 @@
 {
   "name": "ember-cli-deploy-compress",
   "version": "0.1.0",
-  "description": "Ember CLI Deploy plugin to compress files in gzip or brotli",
+  "description": "Ember CLI Deploy plugin to compress files in gzip or brotli automatically depending on supported browsers",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -11,7 +11,7 @@
     "build": "ember build",
     "test": "node tests/runner.js && ./node_modules/.bin/eslint index.js tests/**/*.js"
   },
-  "repository": "https://github.com/cibernox/ember-cli-deploy-compress",
+  "repository": "https://github.com/dockyard/ember-cli-deploy-compress",
   "engines": {
     "node": "^4.5 || 6.* || >= 7.*"
   },
