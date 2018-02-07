@@ -19,7 +19,7 @@ module.exports = {
     var fs = require('fs');
     let targets = this._getTargets();
     let canUseBrotli = caniuse.isSupported('brotli', targets.browsers.join(','));
-    console.log('canUseBrotli', result);
+    console.log('canUseBrotli', canUseBrotli);
     var DeployPlugin = DeployPluginBase.extend({
       name: options.name,
       defaultConfig: {
