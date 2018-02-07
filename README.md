@@ -5,6 +5,9 @@
 This plugins is more or less the fusion of [ember-cli-deploy-gzip](https://github.com/ember-cli-deploy/ember-cli-deploy-gzip) and [ember-cli-deploy-brotli](https://github.com/mfeckie/ember-cli-deploy-brotli) that smartly uses your matrix of supported browsers in `config/targets.js` and the information
 from [caniuse.com](https://caniuse.com/#feat=brotli) to decide the best compression automatically.
 
+When brotli is supported you tipically get around ~17% reduction on the file size of the average javascript files, and
+even bigger in html and css files.
+
 ## What is an ember-cli-deploy plugin?
 
 A plugin is an addon that can be executed as a part of the ember-cli-deploy pipeline. A plugin will implement one or more of the ember-cli-deploy's pipeline hooks.
