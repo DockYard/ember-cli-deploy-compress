@@ -18,7 +18,8 @@ module.exports = {
   createDeployPlugin(options) {
     var fs = require('fs');
     let targets = this._getTargets();
-    caniuse.isSupported('brotli', targets.browsers);
+    let canUseBrotli = caniuse.isSupported('brotli', targets.browsers.join(','));
+    console.log('canUseBrotli', result);
     var DeployPlugin = DeployPluginBase.extend({
       name: options.name,
       defaultConfig: {
