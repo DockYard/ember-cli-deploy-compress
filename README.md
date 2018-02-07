@@ -1,37 +1,15 @@
-# [Early WIP]
-This is work to be done on the next dockyard friday.
-
 # ember-cli-deploy-compress
 
-> An ember-cli-deploy plugin to compress files in-place using gzip or brotli compression automatically.
+> An ember-cli-deploy plugin to compress files in-place choosing between gzip or brotli compression automatically based on your supported browsers.
 
-[![](https://ember-cli-deploy.github.io/ember-cli-deploy-version-badges/plugins/ember-cli-deploy-compress.svg)](http://ember-cli-deploy.github.io/ember-cli-deploy-version-badges/)
-
-This plugin compresses files in-place using gzip compression. This is helpful to prepare for upload to an asset host that expects files to be pre-compressed.
+This plugins is more or less the fusion of [ember-cli-deploy-gzip](https://github.com/ember-cli-deploy/ember-cli-deploy-gzip) and [ember-cli-deploy-brotli](https://github.com/mfeckie/ember-cli-deploy-brotli) that smartly uses your matrix of supported browsers in `config/targets.js` and the information
+from [caniuse.com](https://caniuse.com/#feat=brotli) to decide the best compression automatically.
 
 ## What is an ember-cli-deploy plugin?
 
 A plugin is an addon that can be executed as a part of the ember-cli-deploy pipeline. A plugin will implement one or more of the ember-cli-deploy's pipeline hooks.
 
 For more information on what plugins are and how they work, please refer to the [Plugin Documentation][1].
-
-## Quick Start
-
-To get up and running quickly, do the following:
-
-- Ensure [ember-cli-deploy-build][2] is installed and configured.
-
-- Install this plugin
-
-```bash
-$ ember install ember-cli-deploy-compress
-```
-
-- Run the pipeline
-
-```bash
-$ ember deploy
-```
 
 ## Installation
 
@@ -48,21 +26,20 @@ For detailed information on what plugin hooks are and how they work, please refe
 - `configure`
 - `willUpload`
 
-
 ## Configuration Options
 
 For detailed information on how configuration of plugins works, please refer to the [Plugin Documentation][1].
 
 ### filePattern
 
-Files matching this pattern will be gzipped.
-Note: image files such as `.png`, `.jpg` and `.gif` should not be gzipped, as they already are compressed.
+Files matching this pattern will be compressed.
+Note: image files such as `.png`, `.jpg` and `.gif` should not be compressed, as they already are.
 
 *Default:* `'\*\*/\*.{js,css,json,ico,map,xml,txt,svg,eot,ttf,woff,woff2}'`
 
 ### ignorePattern
 
-Files matching this pattern will *not* be gzipped even if they match filePattern
+Files matching this pattern will *not* be compressed even if they match filePattern
 
 *Default:* null
 
@@ -80,7 +57,8 @@ The list of built project files. This option should be relative to `distDir` and
 
 ### zopfli
 
-Use node-zopfli for compression (better than regular gzip compression, but slower).
+Use node-zopfli for gzip compression (better than regular gzip compression but worse that brotli compression. When brotli is not available for your
+browsers it's a good option, but compression takes more time).
 
 If set to `true`, you will need to `npm install node-zopfli --save-dev` in your app.
 
@@ -88,7 +66,7 @@ If set to `true`, you will need to `npm install node-zopfli --save-dev` in your 
 
 ### keep
 
-Keep original file and write compressed data to `originalFile.gz`
+Keep original file and write compressed data to `originalFile.gz` (or `originalFile.br`)
 
 *Default:* `false`
 
@@ -102,7 +80,7 @@ The following properties are expected to be present on the deployment `context` 
 ## Plugins known to work well with this one
 
 [ember-cli-deploy-build][2]
-[ember-cli-deploy-s3][3]
+[ember-cli-deploy-s3][3] (Starting in version 1.2.0)
 
 ## Running Tests
 
