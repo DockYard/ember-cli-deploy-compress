@@ -148,6 +148,9 @@ module.exports = {
         if (compression.indexOf('best') > -1 && compression.length > 1) {
           throw new Error('The "compression" config cannot combine "best" with other values');
         }
+        if (compression.length > 1 && !this.readConfig('keep')) {
+          throw new Error('You cannot compress using both brotli and gzip unless you enable the `keep` option');
+        }
       },
 
       _getCompression() {
