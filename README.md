@@ -73,7 +73,7 @@ Keep original file and write compressed data to `originalFile.gz` (or `originalF
 
 *Default:* `false`
 
-### Compression
+### compression
 
 It determines the compression algorithm used.
 
