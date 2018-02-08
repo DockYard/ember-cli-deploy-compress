@@ -69,9 +69,21 @@ If set to `true`, you will need to `npm install node-zopfli --save-dev` in your 
 
 ### keep
 
-Keep original file and write compressed data to `originalFile.gz` (or `originalFile.br`)
+Keep original file and write compressed data to `originalFile.gz` (or `originalFile.br`, or both)
 
 *Default:* `false`
+
+### Compression
+
+It determines the compression algorithm used.
+
+*Default:* `["best"]`
+
+When the value is `["best"]`, it will automatically decide wether it can use brotli or has to stick
+to gzip automatically.
+If the users want to force one algorithm, they force it passing `compression: ["brotli"]`.
+Also, users can force the addon to use both algorithms simultaneously with `compression: ["gzip", "brotli"]`. When both algorithms are used, the user has to also enable the `keep` option.
+
 
 ## Prequisites
 
