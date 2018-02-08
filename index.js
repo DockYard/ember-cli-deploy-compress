@@ -6,11 +6,12 @@ var fs        = require('fs');
 var path      = require('path');
 var minimatch = require('minimatch');
 var caniuse   = require('caniuse-api');
-
-var denodeify  = require('rsvp').denodeify;
+var RSVP      = require('rsvp')
+var denodeify = RSVP.denodeify;
 var renameFile = denodeify(fs.rename);
 
 var DeployPluginBase = require('ember-cli-deploy-plugin');
+var validCompressions = ['best', 'gzip', 'brotli'];
 
 module.exports = {
   name: 'ember-cli-deploy-compress',
@@ -26,6 +27,7 @@ module.exports = {
       defaultConfig: {
         filePattern: '**/*.{js,css,json,ico,map,xml,txt,svg,eot,ttf,woff,woff2}',
         ignorePattern: null,
+        compression: ['best'],
         zopfli: false,
         keep: false,
         distDir(context){
@@ -38,25 +40,7 @@ module.exports = {
 
       configure(context) {
         this._super.configure.call(this, context);
-        if (this.canUseBrotli) {
-          this.log("Using brotli for compression", { verbose: true });
-          let lib = require('iltorb');
-          this.buildCompressor = function() {
-            return lib.compressStream({ quality: 11 });
-          }
-        } else if (this.readConfig('zopfli')) {
-          this.log("Using zopfli for compression", { verbose: true });
-          let lib = this.project.require('node-zopfli');
-          this.buildCompressor = function() {
-            return lib.createGzip({ format: 'gzip' });
-          }
-        } else {
-          this.log("Using standard gzip for compression", { verbose: true });
-          let lib = require('zlib');
-          this.buildCompressor = function() {
-            return lib.createGzip({ format: 'gzip' });
-          }
-        }
+        this._validateCompressionConfig();
       },
 
       willUpload(/* context */) {
@@ -67,53 +51,56 @@ module.exports = {
         var distDir         = this.readConfig('distDir');
         var distFiles       = this.readConfig('distFiles') || [];
         var keep            = this.readConfig('keep');
-        var outputProp      = this.canUseBrotli ? 'brotliCompressedFiles' : 'gzippedFiles';
 
         this.log('compressing `' + filePattern + '`', { verbose: true });
         this.log('ignoring `' + ignorePattern + '`', { verbose: true });
 
-        return this._compressFiles(distDir, distFiles, filePattern, ignorePattern, keep)
-          .then(function(compressedFiles) {
-            self.log(`compressed ${compressedFiles.length} files ok`, { verbose: true });
-            if (keep) {
-              self.log('keep is enabled, added compressed files to `context.distFiles`', { verbose: true });
-              return {
-                distFiles: [].concat(compressedFiles), // needs to be a copy
-                [outputProp]: compressedFiles
-              };
-            }
-            return { [outputProp]: compressedFiles };
-          })
-          .catch(this._errorMessage.bind(this));
+        let promises = { gzippedFiles: [], brotliCompressedFiles: [] };
+        if (this._mustCompressWithBrotli()) {
+          this.log('Compressing files with brotli', { verbose: true });
+          promises.brotliCompressedFiles = this._compressFiles(distDir, distFiles, filePattern, ignorePattern, keep, 'brotli');
+        }
+        if (this._mustCompressWithGzip()) {
+          this.log('Compressing files with gzip', { verbose: true });
+          promises.gzippedFiles = this._compressFiles(distDir, distFiles, filePattern, ignorePattern, keep, 'gzip');
+        }
+        return RSVP.hash(promises).then(function({ gzippedFiles, brotliCompressedFiles }) {
+          self.log(`compressed ${gzippedFiles.length + brotliCompressedFiles.length} files ok`, { verbose: true });
+          if (keep) {
+            self.log('keep is enabled, added compressed files to `context.distFiles`', { verbose: true });
+            return {
+              distFiles: [].concat(gzippedFiles).concat(brotliCompressedFiles), // needs to be a copy
+              gzippedFiles,
+              brotliCompressedFiles
+            };
+          } else {
+            return { gzippedFiles, brotliCompressedFiles };
+          }
+        }).catch(this._errorMessage.bind(this));
       },
-      _compressFiles(distDir, distFiles, filePattern, ignorePattern, keep) {
+      _compressFiles(distDir, distFiles, filePattern, ignorePattern, keep, format) {
         var filesToCompress = distFiles.filter(minimatch.filter(filePattern, { matchBase: true }));
         if (ignorePattern != null) {
             filesToCompress = filesToCompress.filter(function(path){
               return !minimatch(path, ignorePattern, { matchBase: true });
             });
         }
-        return RSVP.map(filesToCompress, this._compressFile.bind(this, distDir, keep));
+        return RSVP.map(filesToCompress, this._compressFile.bind(this, distDir, keep, format));
       },
-      _compressFile(distDir, keep, filePath) {
+      _compressFile(distDir, keep, format, filePath) {
         var self = this;
         var fullPath = path.join(distDir, filePath);
-        var fileExtension = this.canUseBrotli ? '.br' : '.gz';
+        var fileExtension = format === 'brotli' ? '.br' : '.gz';
         var outFilePath = fullPath + fileExtension;
+
         return new RSVP.Promise(function(resolve, reject) {
           var inp = fs.createReadStream(fullPath);
           var out = fs.createWriteStream(outFilePath);
-
-          inp.pipe(self.buildCompressor()).pipe(out);
-          inp.on('error', function(err){
-            reject(err);
-          });
-          out.on('error', function(err){
-            reject(err);
-          });
-          out.on('finish', function(){
-            resolve();
-          });
+          let compressor = self[format + 'Compressor']();
+          inp.pipe(compressor).pipe(out);
+          inp.on('error', function(err){ reject(err); });
+          out.on('error', function(err){ reject(err); });
+          out.on('finish', function(){ resolve(); });
         }).then(function(){
           if(!keep) {
             return renameFile(fullPath + fileExtension, fullPath).then(function() {
@@ -128,9 +115,50 @@ module.exports = {
           return outFilePath;
         });
       },
+      gzipCompressor() {
+        if (this.readConfig('zopfli')) {
+          return this.project.require('node-zopfli').createGzip({ format: 'gzip' })
+        } else {
+          return require('zlib').createGzip({ format: 'gzip' });
+        }
+      },
+
+      brotliCompressor() {
+        return require('iltorb').compressStream({ quality: 11 });
+      },
+      _mustCompressWithBrotli() {
+        let compression = this._getCompression();
+        return compression.indexOf('brotli') > -1 || (compression.indexOf('best') > -1 && this.canUseBrotli);
+      },
+      _mustCompressWithGzip() {
+        let compression = this._getCompression();
+        return compression.indexOf('gzip') > -1 || (compression.indexOf('best') > -1 && !this.canUseBrotli);
+      },
       _errorMessage(error) {
         this.log(error, { color: 'red' });
         return RSVP.reject(error);
+      },
+      _validateCompressionConfig() {
+        let compression = this._getCompression();
+        compression.forEach(function (value) {
+          if (validCompressions.indexOf(value) === -1) {
+            throw new Error(`The "compression" config option has a wrong value: "${value}"`);
+          }
+        });
+        if (compression.indexOf('best') > -1 && compression.length > 1) {
+          throw new Error('The "compression" config cannot combine "best" with other values');
+        }
+        if (compression.length > 1 && !this.readConfig('keep')) {
+          throw new Error('You cannot compress using both brotli and gzip unless you enable the `keep` option');
+        }
+      },
+
+      _getCompression() {
+        let compression = this.readConfig('compression');
+        if (!Array.isArray(compression)) {
+          compression = [compression];
+        }
+        return compression;
       }
     });
     return new DeployPlugin();
