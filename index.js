@@ -25,7 +25,7 @@ module.exports = {
       name: options.name,
       canUseBrotli: canUseBrotli,
       defaultConfig: {
-        filePattern: '**/*.{js,css,json,ico,map,xml,txt,svg,eot,ttf,woff,woff2}',
+        filePattern: '**/*.{js,css,json,ico,map,xml,txt,svg,eot,ttf,woff,woff2,appcache,webmanifest}',
         ignorePattern: null,
         compression: ['best'],
         zopfli: false,
