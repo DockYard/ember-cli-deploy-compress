@@ -26,7 +26,7 @@ ember install ember-cli-deploy-compress
 For detailed information on what plugin hooks are and how they work, please refer to the [Plugin Documentation][1].
 
 - `configure`
-- `willUpload`
+- `didBuild`
 
 ## Configuration Options
 

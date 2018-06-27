@@ -43,7 +43,7 @@ module.exports = {
         this._validateCompressionConfig();
       },
 
-      willUpload(/* context */) {
+      didBuild(/* context */) {
         var self = this;
 
         var filePattern     = this.readConfig('filePattern');

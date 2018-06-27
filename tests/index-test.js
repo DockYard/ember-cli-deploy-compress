@@ -36,7 +36,7 @@ describe('compress plugin', function() {
     });
 
     assert.equal(typeof result.configure, 'function');
-    assert.equal(typeof result.willUpload, 'function');
+    assert.equal(typeof result.didBuild, 'function');
   });
 
   describe('configure hook', function() {
@@ -140,7 +140,7 @@ describe('compress plugin', function() {
     });
   });
 
-  describe('willUpload hook', function() {
+  describe('didBuild hook', function() {
     var plugin;
     var context;
 
@@ -188,7 +188,7 @@ describe('compress plugin', function() {
 
       describe('When brotli compression is not supported in all browsers', function() {
         it('gzips the matching files which are not ignored', function() {
-          assert.isFulfilled(plugin.willUpload(context))
+          assert.isFulfilled(plugin.didBuild(context))
             .then(function(result) {
               assert.deepEqual(result, { gzippedFiles: ['assets/foo.js'] });
               done();
@@ -203,7 +203,7 @@ describe('compress plugin', function() {
           });
 
           it('gzips the matching files with .gz suffix', function(done) {
-            assert.isFulfilled(plugin.willUpload(context))
+            assert.isFulfilled(plugin.didBuild(context))
               .then(function(result) {
                 assert.deepEqual(result.gzippedFiles, ['assets/foo.js.gz']);
                 done();
@@ -213,7 +213,7 @@ describe('compress plugin', function() {
           });
 
           it('adds the gzipped files to the distFiles', function(done) {
-            assert.isFulfilled(plugin.willUpload(context))
+            assert.isFulfilled(plugin.didBuild(context))
               .then(function(result) {
                 assert.include(result.distFiles, 'assets/foo.js.gz');
                 done();
@@ -223,7 +223,7 @@ describe('compress plugin', function() {
           });
 
           it('does not use the same object for gzippedFiles and distFiles', function(done) {
-            assert.isFulfilled(plugin.willUpload(context))
+            assert.isFulfilled(plugin.didBuild(context))
               .then(function(result) {
                 assert.notStrictEqual(result.distFiles, result.gzippedFiles);
                 done();
@@ -241,7 +241,7 @@ describe('compress plugin', function() {
         });
 
         it('compresses with brotli the matching files which are not ignored', function () {
-          assert.isFulfilled(plugin.willUpload(context))
+          assert.isFulfilled(plugin.didBuild(context))
             .then(function (result) {
               assert.deepEqual(result, { brotliCompressedFiles: ['assets/foo.js'] });
               done();
@@ -256,7 +256,7 @@ describe('compress plugin', function() {
           });
 
           it('compresses with brotli the matching files with .br suffix', function (done) {
-            assert.isFulfilled(plugin.willUpload(context))
+            assert.isFulfilled(plugin.didBuild(context))
               .then(function (result) {
                 assert.deepEqual(result.brotliCompressedFiles, ['assets/foo.js.br']);
                 done();
@@ -266,7 +266,7 @@ describe('compress plugin', function() {
           });
 
           it('adds the brotli-compressed files to the distFiles', function (done) {
-            assert.isFulfilled(plugin.willUpload(context))
+            assert.isFulfilled(plugin.didBuild(context))
               .then(function (result) {
                 assert.include(result.distFiles, 'assets/foo.js.br');
                 done();
@@ -276,7 +276,7 @@ describe('compress plugin', function() {
           });
 
           it('does not use the same object for brotliCompressedFiles and distFiles', function (done) {
-            assert.isFulfilled(plugin.willUpload(context))
+            assert.isFulfilled(plugin.didBuild(context))
               .then(function (result) {
                 assert.notStrictEqual(result.distFiles, result.brotliCompressedFiles);
                 done();
@@ -299,7 +299,7 @@ describe('compress plugin', function() {
         });
 
         it('gzips the matching files which are not ignored', function () {
-          assert.isFulfilled(plugin.willUpload(context))
+          assert.isFulfilled(plugin.didBuild(context))
             .then(function (result) {
               assert.deepEqual(result, { gzippedFiles: ['assets/foo.js'] });
               done();
@@ -314,7 +314,7 @@ describe('compress plugin', function() {
           });
 
           it('gzips the matching files with .gz suffix', function (done) {
-            assert.isFulfilled(plugin.willUpload(context))
+            assert.isFulfilled(plugin.didBuild(context))
               .then(function (result) {
                 assert.deepEqual(result.gzippedFiles, ['assets/foo.js.gz']);
                 done();
@@ -324,7 +324,7 @@ describe('compress plugin', function() {
           });
 
           it('adds the gzipped files to the distFiles', function (done) {
-            assert.isFulfilled(plugin.willUpload(context))
+            assert.isFulfilled(plugin.didBuild(context))
               .then(function (result) {
                 assert.include(result.distFiles, 'assets/foo.js.gz');
                 done();
@@ -334,7 +334,7 @@ describe('compress plugin', function() {
           });
 
           it('does not use the same object for gzippedFiles and distFiles', function (done) {
-            assert.isFulfilled(plugin.willUpload(context))
+            assert.isFulfilled(plugin.didBuild(context))
               .then(function (result) {
                 assert.notStrictEqual(result.distFiles, result.gzippedFiles);
                 done();
@@ -352,7 +352,7 @@ describe('compress plugin', function() {
         });
 
         it('gzips the matching files which are not ignored', function () {
-          assert.isFulfilled(plugin.willUpload(context))
+          assert.isFulfilled(plugin.didBuild(context))
             .then(function (result) {
               assert.deepEqual(result, { gzippedFiles: ['assets/foo.js'] });
               done();
@@ -367,7 +367,7 @@ describe('compress plugin', function() {
           });
 
           it('gzips the matching files with .gz suffix', function (done) {
-            assert.isFulfilled(plugin.willUpload(context))
+            assert.isFulfilled(plugin.didBuild(context))
               .then(function (result) {
                 assert.deepEqual(result.gzippedFiles, ['assets/foo.js.gz']);
                 done();
@@ -377,7 +377,7 @@ describe('compress plugin', function() {
           });
 
           it('adds the gzipped files to the distFiles', function (done) {
-            assert.isFulfilled(plugin.willUpload(context))
+            assert.isFulfilled(plugin.didBuild(context))
               .then(function (result) {
                 assert.include(result.distFiles, 'assets/foo.js.gz');
                 done();
@@ -387,7 +387,7 @@ describe('compress plugin', function() {
           });
 
           it('does not compress with brotli leaving files with .br suffix', function (done) {
-            assert.isFulfilled(plugin.willUpload(context))
+            assert.isFulfilled(plugin.didBuild(context))
               .then(function (result) {
                 assert.notOk(result.gzippedFiles.indexOf('assets/foo.js.br') > -1);
                 done();
@@ -397,7 +397,7 @@ describe('compress plugin', function() {
           });
 
           it('does not use the same object for gzippedFiles and distFiles', function (done) {
-            assert.isFulfilled(plugin.willUpload(context))
+            assert.isFulfilled(plugin.didBuild(context))
               .then(function (result) {
                 assert.notStrictEqual(result.distFiles, result.gzippedFiles);
                 done();
@@ -421,7 +421,7 @@ describe('compress plugin', function() {
         });
 
         it('gzips the matching files with .gz suffix', function (done) {
-          assert.isFulfilled(plugin.willUpload(context))
+          assert.isFulfilled(plugin.didBuild(context))
             .then(function (result) {
               assert.deepEqual(result.gzippedFiles, ['assets/foo.js.gz']);
               done();
@@ -431,7 +431,7 @@ describe('compress plugin', function() {
         });
 
         it('adds the gzipped files to the distFiles', function (done) {
-          assert.isFulfilled(plugin.willUpload(context))
+          assert.isFulfilled(plugin.didBuild(context))
             .then(function (result) {
               assert.include(result.distFiles, 'assets/foo.js.gz');
               done();
@@ -441,7 +441,7 @@ describe('compress plugin', function() {
         });
 
         it('compresses with brotli the matching files with .br suffix', function (done) {
-          assert.isFulfilled(plugin.willUpload(context))
+          assert.isFulfilled(plugin.didBuild(context))
             .then(function (result) {
               assert.deepEqual(result.brotliCompressedFiles, ['assets/foo.js.br']);
               done();
@@ -451,7 +451,7 @@ describe('compress plugin', function() {
         });
 
         it('adds the brotli-compressed files to the distFiles', function (done) {
-          assert.isFulfilled(plugin.willUpload(context))
+          assert.isFulfilled(plugin.didBuild(context))
             .then(function (result) {
               assert.include(result.distFiles, 'assets/foo.js.br');
               done();
@@ -467,7 +467,7 @@ describe('compress plugin', function() {
         });
 
         it('gzips the matching files with .gz suffix', function (done) {
-          assert.isFulfilled(plugin.willUpload(context))
+          assert.isFulfilled(plugin.didBuild(context))
             .then(function (result) {
               assert.deepEqual(result.gzippedFiles, ['assets/foo.js.gz']);
               done();
@@ -477,7 +477,7 @@ describe('compress plugin', function() {
         });
 
         it('adds the gzipped files to the distFiles', function (done) {
-          assert.isFulfilled(plugin.willUpload(context))
+          assert.isFulfilled(plugin.didBuild(context))
             .then(function (result) {
               assert.include(result.distFiles, 'assets/foo.js.gz');
               done();
@@ -487,7 +487,7 @@ describe('compress plugin', function() {
         });
 
         it('compresses with brotli the matching files with .br suffix', function (done) {
-          assert.isFulfilled(plugin.willUpload(context))
+          assert.isFulfilled(plugin.didBuild(context))
             .then(function (result) {
               assert.deepEqual(result.brotliCompressedFiles, ['assets/foo.js.br']);
               done();
@@ -497,7 +497,7 @@ describe('compress plugin', function() {
         });
 
         it('adds the brotli-compressed files to the distFiles', function (done) {
-          assert.isFulfilled(plugin.willUpload(context))
+          assert.isFulfilled(plugin.didBuild(context))
             .then(function (result) {
               assert.include(result.distFiles, 'assets/foo.js.br');
               done();
