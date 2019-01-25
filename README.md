@@ -63,9 +63,9 @@ This option should be relative to `distDir` and should include the files that ma
 
 ### zopfli
 
-If brotli is not available for your browsers, use node-zopfli for gzip compression. It is better than regular gzip compression and a good substitute when brotli is not available.
+If brotli is not available for your browsers, use zopfli for gzip compression. It is better than regular gzip compression and a good substitute when brotli is not available.
 
-If set to `true`, you will need to `npm install node-zopfli --save-dev` in your app.
+If set to `true`, you will need to install `node-zopfli-es` (recommended) or `node-zopfli` in your app: `npm install node-zopfli-es --save-dev`.
 
 *Default:* `false`
 

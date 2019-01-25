@@ -27,6 +27,7 @@
     "glob": "^7.0.5",
     "mocha": "^5.2.0",
     "multiline": "^1.0.2",
+    "node-zopfli-es": "^1.0.1",
     "rimraf": "^2.3.4"
   },
   "keywords": [

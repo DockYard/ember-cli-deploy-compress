@@ -157,7 +157,7 @@ describe('compress plugin', function() {
           'assets/ignore.js',
         ],
         ui: mockUi,
-        project: { name: function() { return 'test-project'; } },
+        project: { name: function() { return 'test-project'; }, require },
         config: {
           compress: {
             filePattern: '**/*.js',
@@ -428,6 +428,35 @@ describe('compress plugin', function() {
           return assert.isFulfilled(plugin.willUpload(context))
             .then(function (result) {
               assert.include(result.distFiles, 'assets/foo.js.br');
+            });
+        });
+      });
+    });
+
+    describe('When zopfli compression is enabled', function() {
+      beforeEach(function() {
+        context.config.compress.zopfli = true;
+      });
+
+      describe('When brotli compression is not supported in all browsers', function() {
+        it('gzips the matching files which are not ignored', function() {
+          return assert.isFulfilled(plugin.willUpload(context))
+            .then(function(result) {
+              assert.deepEqual(result, { gzippedFiles: ['assets/foo.js'], brotliCompressedFiles: [] });
+            })
+        });
+      });
+
+      describe('When brotli compression is supported in all browsers', function () {
+        beforeEach(function() {
+          plugin.canUseBrotli = true;
+          plugin.configure();
+        });
+
+        it('compresses with brotli the matching files which are not ignored', function() {
+          return assert.isFulfilled(plugin.willUpload(context))
+            .then(function (result) {
+              assert.deepEqual(result, { gzippedFiles: [], brotliCompressedFiles: ['assets/foo.js'] });
             });
         });
       });
