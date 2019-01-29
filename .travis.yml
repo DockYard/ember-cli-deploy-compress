@@ -1,16 +1,13 @@
 ---
 language: node_js
 node_js:
-  - "4"
+  - "6"
+
+sudo: false
+dist: trusty
 
 cache:
   yarn: true
-  directories:
-    - $HOME/.yarn-cache
-
-before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash
-  - export PATH=$HOME
 
 install:
   - yarn install --no-lockfile
