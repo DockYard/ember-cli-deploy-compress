@@ -9,7 +9,7 @@
   "scripts": {
     "start": "ember server",
     "build": "ember build",
-    "test": "node tests/runner.js && ./node_modules/.bin/eslint index.js tests/**/*.js"
+    "test": "mocha tests && eslint index.js tests/**/*.js"
   },
   "repository": "https://github.com/dockyard/ember-cli-deploy-compress",
   "engines": {
