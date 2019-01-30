@@ -21,6 +21,8 @@ Run the following command in your terminal:
 ember install ember-cli-deploy-compress
 ```
 
+Note that this addon requires at least node.js 8!
+
 ## ember-cli-deploy Hooks Implemented
 
 For detailed information on what plugin hooks are and how they work, please refer to the [Plugin Documentation][1].
@@ -63,9 +65,9 @@ This option should be relative to `distDir` and should include the files that ma
 
 ### zopfli
 
-If brotli is not available for your browsers, use node-zopfli for gzip compression. It is better than regular gzip compression and a good substitute when brotli is not available.
+If brotli is not available for your browsers, use zopfli for gzip compression. It is better than regular gzip compression and a good substitute when brotli is not available.
 
-If set to `true`, you will need to `npm install node-zopfli --save-dev` in your app.
+If set to `true`, you will need to install `node-zopfli-es` (recommended) or `node-zopfli` in your app: `npm install node-zopfli-es --save-dev`.
 
 *Default:* `false`
 

@@ -117,7 +117,10 @@ module.exports = {
       },
       gzipCompressor() {
         if (this.readConfig('zopfli')) {
-          return this.project.require('node-zopfli').createGzip({ format: 'gzip' })
+          let pkgName =
+            this._hasPackage('node-zopfli-es') ? 'node-zopfli-es' :
+            this._hasPackage('node-zopfli') ? 'node-zopfli' : null;
+          return this.project.require(pkgName).createGzip({ format: 'gzip' })
         } else {
           return require('zlib').createGzip({ format: 'gzip' });
         }
@@ -125,6 +128,15 @@ module.exports = {
 
       brotliCompressor() {
         return require('iltorb').compressStream({ quality: 11 });
+      },
+
+      _hasPackage(pkgName) {
+        try {
+          this.project.require.resolve(pkgName);
+          return true;
+        } catch (e) {
+          return false;
+        }
       },
       _mustCompressWithBrotli() {
         let compression = this._getCompression();

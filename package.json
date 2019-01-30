@@ -13,7 +13,7 @@
   },
   "repository": "https://github.com/dockyard/ember-cli-deploy-compress",
   "engines": {
-    "node": "6.* || 8.* || >= 10.*"
+    "node": "8.* || >= 10.*"
   },
   "author": "Miguel Camba",
   "license": "MIT",
@@ -27,6 +27,7 @@
     "glob": "^7.0.5",
     "mocha": "^5.2.0",
     "multiline": "^1.0.2",
+    "node-zopfli-es": "^1.0.1",
     "rimraf": "^2.3.4"
   },
   "keywords": [
