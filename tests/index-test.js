@@ -157,7 +157,17 @@ describe('compress plugin', function() {
           'assets/ignore.js',
         ],
         ui: mockUi,
-        project: { name: function() { return 'test-project'; }, require },
+        project: {
+          name() {
+            return 'test-project';
+          },
+          require() {
+            return require(...arguments);
+          },
+          dependencies() {
+            return { 'node-zopfli-es': '1.0.1' };
+          }
+        },
         config: {
           compress: {
             filePattern: '**/*.js',
