@@ -120,6 +120,11 @@ module.exports = {
           let pkgName =
             this._hasPackage('node-zopfli-es') ? 'node-zopfli-es' :
             this._hasPackage('node-zopfli') ? 'node-zopfli' : null;
+
+          if (pkgName === null) {
+            throw new Error('No compatible zopfli package found. Install node-zopfli-es for zopfli support!');
+          }
+
           return this.project.require(pkgName).createGzip({ format: 'gzip' })
         } else {
           return require('zlib').createGzip({ format: 'gzip' });
@@ -131,12 +136,7 @@ module.exports = {
       },
 
       _hasPackage(pkgName) {
-        try {
-          this.project.require.resolve(pkgName);
-          return true;
-        } catch (e) {
-          return false;
-        }
+        return pkgName in this.project.dependencies();
       },
       _mustCompressWithBrotli() {
         let compression = this._getCompression();
