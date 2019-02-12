@@ -7,6 +7,9 @@ const fs  = require('fs');
 const path  = require('path');
 const rimraf  = RSVP.denodeify(require('rimraf'));
 
+const BROTLI_SUPPORTED = ['last 2 Chrome versions'];
+const BROTLI_NOT_SUPPORTED = ['ie 11'];
+
 describe('compress plugin', function() {
   let subject, mockUi, config;
 
@@ -166,6 +169,9 @@ describe('compress plugin', function() {
           },
           dependencies() {
             return { 'node-zopfli-es': '1.0.1' };
+          },
+          targets: {
+            browsers: null
           }
         },
         config: {
@@ -234,7 +240,7 @@ describe('compress plugin', function() {
 
       describe('When brotli compression is supported in all browsers', function () {
         beforeEach(function() {
-          plugin.canUseBrotli = true;
+          plugin.project.targets.browsers = BROTLI_SUPPORTED;
           plugin.configure();
         });
 
@@ -281,7 +287,7 @@ describe('compress plugin', function() {
 
       describe('When brotli compression is not supported in all browsers', function () {
         beforeEach(function () {
-          plugin.canUseBrotli = false;
+          plugin.project.targets.browsers = BROTLI_NOT_SUPPORTED;
         });
 
         it('gzips the matching files which are not ignored', function() {
@@ -321,7 +327,7 @@ describe('compress plugin', function() {
 
       describe('When brotli compression is supported in all browsers', function () {
         beforeEach(function () {
-          plugin.canUseBrotli = true;
+          plugin.project.targets.browsers = BROTLI_SUPPORTED;
           plugin.configure();
         });
 
@@ -376,7 +382,7 @@ describe('compress plugin', function() {
 
       describe('When brotli compression is not supported in all browsers', function () {
         beforeEach(function () {
-          plugin.canUseBrotli = false;
+          plugin.project.targets.browsers = BROTLI_NOT_SUPPORTED;
         });
 
         it('gzips the matching files with .gz suffix', function() {
@@ -408,9 +414,9 @@ describe('compress plugin', function() {
         });
       });
 
-      describe('When brotli compression is not supported in all browsers', function () {
+      describe('When brotli compression is supported in all browsers', function () {
         beforeEach(function () {
-          plugin.canUseBrotli = true;
+          plugin.project.targets.browsers = BROTLI_SUPPORTED;
         });
 
         it('gzips the matching files with .gz suffix', function() {
@@ -459,7 +465,7 @@ describe('compress plugin', function() {
 
       describe('When brotli compression is supported in all browsers', function () {
         beforeEach(function() {
-          plugin.canUseBrotli = true;
+          plugin.project.targets.browsers = BROTLI_SUPPORTED;
           plugin.configure();
         });
 
