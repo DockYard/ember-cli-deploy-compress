@@ -18,12 +18,10 @@ module.exports = {
 
   createDeployPlugin(options) {
     var fs = require('fs');
-    let browsers = this._getBrowsers();
-    let canUseBrotli = !!browsers && caniuse.isSupported('brotli', browsers);
 
     var DeployPlugin = DeployPluginBase.extend({
       name: options.name,
-      canUseBrotli: canUseBrotli,
+      canUseBrotli: false,
       defaultConfig: {
         filePattern: '**/*.{js,css,json,ico,map,xml,txt,svg,eot,ttf,woff,woff2,appcache,webmanifest}',
         ignorePattern: null,
@@ -54,6 +52,10 @@ module.exports = {
 
         this.log('compressing `' + filePattern + '`', { verbose: true });
         this.log('ignoring `' + ignorePattern + '`', { verbose: true });
+
+        // Intentionally calling this as late as possible to give other addons a
+        // chance to influence it somehow, e.g. through ENV variables.
+        this._determineBrotliSupport();
 
         let promises = { gzippedFiles: [], brotliCompressedFiles: [] };
         if (this._mustCompressWithBrotli()) {
@@ -138,6 +140,10 @@ module.exports = {
       _hasPackage(pkgName) {
         return pkgName in this.project.dependencies();
       },
+      _determineBrotliSupport() {
+        let browsers = this.project && this.project.targets && this.project.targets.browsers;
+        this.canUseBrotli = !!browsers && caniuse.isSupported('brotli', browsers);
+      },
       _mustCompressWithBrotli() {
         let compression = this._getCompression();
         return compression.indexOf('brotli') > -1 || (compression.indexOf('best') > -1 && this.canUseBrotli);
@@ -174,9 +180,5 @@ module.exports = {
       }
     });
     return new DeployPlugin();
-  },
-
-  _getBrowsers() {
-    return this.project && this.project.targets && this.project.targets.browsers;
-  },
+  }
 };
