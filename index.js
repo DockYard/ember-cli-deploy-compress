@@ -4,6 +4,7 @@
 var RSVP      = require('rsvp');
 var fs        = require('fs');
 var path      = require('path');
+var zlib      = require('zlib');
 var minimatch = require('minimatch');
 var caniuse   = require('caniuse-api');
 var RSVP      = require('rsvp')
@@ -134,6 +135,15 @@ module.exports = {
       },
 
       brotliCompressor() {
+        // Use native brotli support on Node >= 11
+        if (zlib.createBrotliCompress) {
+          var brotliOptions = {};
+
+          brotliOptions[zlib.constants.BROTLI_PARAM_QUALITY] = 11;
+
+          return zlib.createBrotliCompress({ params: brotliOptions });
+        }
+
         return require('iltorb').compressStream({ quality: 11 });
       },
 
