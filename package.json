@@ -36,7 +36,7 @@
   ],
   "dependencies": {
     "caniuse-api": "^3.0.0",
-    "chalk": "^4.1.0",
+    "chalk": "^2.4.2",
     "core-object": "^3.1.5",
     "ember-cli-deploy-plugin": "^0.2.9",
     "iltorb": "^2.3.2",
