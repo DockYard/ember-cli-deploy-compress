@@ -18,30 +18,30 @@
   "author": "Miguel Camba",
   "license": "MIT",
   "devDependencies": {
-    "chai": "^3.5.0",
-    "chai-as-promised": "^6.0.0",
+    "@octokit/rest": "^18.1.0",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "ember-cli": "^3.1.4",
     "ember-cli-release": "^1.0.0-beta.2",
-    "eslint": "^3.18.0",
-    "github": "^9.2.0",
+    "eslint": "^7.19.0",
     "glob": "^7.0.5",
-    "mocha": "^5.2.0",
-    "multiline": "^1.0.2",
+    "mocha": "^8.2.1",
+    "multiline": "^2.0.0",
     "node-zopfli-es": "^1.0.1",
-    "rimraf": "^2.3.4"
+    "rimraf": "^3.0.2"
   },
   "keywords": [
     "ember-addon",
     "ember-cli-deploy-plugin"
   ],
   "dependencies": {
-    "caniuse-api": "^2.0.0",
-    "chalk": "^1.1.3",
-    "core-object": "^2.0.6",
+    "caniuse-api": "^3.0.0",
+    "chalk": "^4.1.0",
+    "core-object": "^3.1.5",
     "ember-cli-deploy-plugin": "^0.2.9",
     "iltorb": "^2.3.2",
     "minimatch": "^3.0.3",
-    "rsvp": "^3.5.0"
+    "rsvp": "^4.8.5"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
