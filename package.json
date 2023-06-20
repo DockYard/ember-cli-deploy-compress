@@ -1,17 +1,16 @@
 {
-  "name": "ember-cli-deploy-compress",
+  "name": "@ember-cli-deploy/ember-cli-deploy-compress",
   "version": "0.4.0",
-  "description": "Ember CLI Deploy plugin to compress files in gzip or brotli automatically depending on supported browsers",
+  "description": "Ember CLI Deploy plugin to compress files in gzip or brotli automatically depending on supported browsers (forked from Dockyard)",
   "directories": {
     "doc": "doc",
     "test": "tests"
   },
   "scripts": {
-    "start": "ember server",
-    "build": "ember build",
+    "release": "release-it",
     "test": "mocha tests && eslint index.js tests/**/*.js"
   },
-  "repository": "https://github.com/dockyard/ember-cli-deploy-compress",
+  "repository": "https://github.com/ember-cli-deploy/ember-cli-deploy-compress",
   "engines": {
     "node": "14.* || 16.* || 18.* || >= 20.*"
   },
@@ -28,6 +27,8 @@
     "mocha": "^5.2.0",
     "multiline": "^1.0.2",
     "node-zopfli-es": "^2.0.2",
+    "release-it": "14.11.8",
+    "release-it-lerna-changelog": "^3.1.0",
     "rimraf": "^2.3.4"
   },
   "keywords": [
@@ -44,5 +45,22 @@
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "release-it": {
+    "plugins": {
+      "release-it-lerna-changelog": {
+        "infile": "CHANGELOG.md",
+        "launchEditor": false
+      }
+    },
+    "git": {
+      "requireCleanWorkingDir": false
+    },
+    "github": {
+      "release": true
+    }
   }
 }
